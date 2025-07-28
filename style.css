@@ -1,0 +1,311 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #1a1a2e; /* 暗い背景 */
+    font-family: 'Share Tech Mono', monospace;
+    color: #00f0f0; /* サイバーな青緑 */
+    margin: 0;
+    overflow: hidden;
+}
+
+.game-container {
+    text-align: center;
+    background-color: #0f0f1a; /* さらに暗い背景 */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 240, 240, 0.5); /* 光る影 */
+    position: relative;
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: #00f0f0;
+    text-shadow: 0 0 10px rgba(0, 240, 240, 0.8);
+    margin-bottom: 20px;
+}
+
+.status-area {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+
+.board {
+    width: calc((var(--board-size) - 1) * var(--cell-size)); /* 盤面の総幅 */
+    height: calc((var(--board-size) - 1) * var(--cell-size)); /* 盤面の総高さ */
+    background-color: #003030; /* 盤面のベース色 */
+    background-image:
+        /* Vertical lines */
+        repeating-linear-gradient(to right, #00f0f0 0, #00f0f0 2px, transparent 2px, transparent var(--cell-size)),
+        /* Horizontal lines */
+        repeating-linear-gradient(to bottom, #00f0f0 0, #00f0f0 2px, transparent 2px, transparent var(--cell-size));
+    background-size: var(--cell-size) var(--cell-size); /* グリッド線の間隔 */
+    background-position: 0 0; /* 線が盤面の端から描画されるように調整 */
+    /* border: 2px solid #00f0f0; */ /* 盤面の外枠はグリッド線で表現するため削除 */
+    box-shadow: 0 0 15px rgba(0, 240, 240, 0.5);
+    margin: 0 auto;
+    position: relative; /* 石の絶対配置の基準 */
+    cursor: pointer;
+    box-sizing: content-box; /* サイズ計算のずれを防ぐ */
+}
+
+.cell { /* cellクラスはクリック判定用として残すが、見た目はなくす */
+    display: none; /* 見た目を非表示 */
+}
+
+.stone {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%); /* 交点の中央に配置 */
+    transition: transform 0.1s ease-out; /* 吹っ飛ばしアニメーション */
+}
+
+.stone.black {
+    background-color: #333; /* 黒石 */
+    border: 2px solid #00f0f0;
+    box-shadow: 0 0 8px rgba(0, 240, 240, 0.8);
+}
+
+.stone.white {
+    background-color: #eee; /* 白石 */
+    border: 2px solid #00f0f0;
+    box-shadow: 0 0 8px rgba(0, 240, 240, 0.8);
+}
+
+.stone.last-move {
+    animation: flame-glow 1s infinite alternate;
+}
+
+@keyframes flame-glow {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 100, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(255, 150, 0, 1), 0 0 30px rgba(255, 50, 0, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(255, 100, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+}
+
+.shockwave {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background-color: rgba(0, 240, 240, 0.5); /* サイバーな青緑の半透明 */
+    transform: translate(-50%, -50%); /* 中央に配置 */
+    animation: shockwave-expand 0.5s ease-out forwards;
+    z-index: 5; /* 石より手前に */
+}
+
+@keyframes shockwave-expand {
+    from {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    to {
+        width: 100px; /* 広がる最大サイズ */
+        height: 100px;
+        opacity: 0;
+    }
+}
+
+.lightning-effect {
+    position: absolute;
+    width: 0;
+    height: 0;
+    background-color: rgba(0, 255, 255, 0.8); /* 明るいシアン */
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: lightning-flash 0.3s ease-out forwards;
+    z-index: 6; /* 衝撃波より手前 */
+}
+
+@keyframes lightning-flash {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    }
+    50% {
+        width: 80px;
+        height: 80px;
+        opacity: 0.8;
+        box-shadow: 0 0 40px rgba(0, 255, 255, 1);
+    }
+    100% {
+        width: 120px;
+        height: 120px;
+        opacity: 0;
+        box-shadow: 0 0 60px rgba(0, 255, 255, 0);
+    }
+}
+
+.ripple-effect {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 240, 240, 0.8) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    animation: ripple-expand 0.8s ease-out forwards;
+    z-index: 4; /* 石と衝撃波の間 */
+}
+
+@keyframes ripple-expand {
+    from {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    to {
+        width: 200px; /* 広がる最大サイズ */
+        height: 200px;
+        opacity: 0;
+    }
+}
+
+.charge-effect {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 0, 0.8); /* 黄色の光 */
+    transform: translate(-50%, -50%);
+    animation: charge-pulse 0.5s ease-in-out forwards;
+    z-index: 7; /* 最前面 */
+}
+
+@keyframes charge-pulse {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 0;
+        box-shadow: 0 0 0 rgba(255, 255, 0, 0);
+    }
+    50% {
+        width: 40px;
+        height: 40px;
+        opacity: 1;
+        box-shadow: 0 0 20px rgba(255, 255, 0, 1);
+    }
+    100% {
+        width: 0;
+        height: 0;
+        opacity: 0;
+        box-shadow: 0 0 0 rgba(255, 255, 0, 0);
+    }
+}
+
+.burst-effect {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background-color: rgba(255, 165, 0, 0.8); /* オレンジ色の光 */
+    transform: translate(-50%, -50%);
+    animation: burst-expand 0.3s ease-out forwards;
+    z-index: 8; /* 最前面 */
+}
+
+@keyframes burst-expand {
+    from {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    to {
+        width: 150px;
+        height: 150px;
+        opacity: 0;
+    }
+}
+
+.connection-line {
+    position: absolute;
+    background-color: rgba(0, 255, 255, 0.8); /* 明るいシアン */
+    height: 2px; /* 線の太さ */
+    transform-origin: left center;
+    animation: connect-fade 0.6s ease-out forwards;
+    z-index: 3; /* 石より奥、盤面より手前 */
+}
+
+@keyframes connect-fade {
+    0% {
+        opacity: 1;
+        transform: scaleX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scaleX(1);
+    }
+}
+
+.flash-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 101; /* 最前面 */
+}
+
+.controls button {
+    background-color: #007070;
+    color: #00f0f0;
+    border: 1px solid #00f0f0;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1em;
+    box-shadow: 0 0 10px rgba(0, 240, 240, 0.3);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.controls button:hover {
+    background-color: #009090;
+    box-shadow: 0 0 15px rgba(0, 240, 240, 0.7);
+}
+
+.game-over-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.game-over-content {
+    background-color: #0f0f1a;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 240, 240, 0.8);
+    color: #00f0f0;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.game-over-content p {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.game-over-content button {
+    font-size: 1.5em;
+}
+
+.hidden {
+    display: none;
+}

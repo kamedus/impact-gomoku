@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOMOKU</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <h1>GOMOKU</h1>
+        <div class="status-area">
+            <p>現在の手番: <span id="currentTurn"></span></p>
+        </div>
+        <div id="board" class="board"></div>
+        <div class="controls">
+            <button id="resetButton">リセット</button>
+        </div>
+        <div class="game-over-overlay hidden">
+            <div class="game-over-content">
+                <p id="gameOverMessage"></p>
+                <button id="restartButton">もう一度</button>
+            </div>
+        </div>
+        <div id="flashEffect" class="flash-effect hidden"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
