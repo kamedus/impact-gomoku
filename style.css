@@ -60,8 +60,8 @@ h1 {
 }
 
 .stone {
-    width: 36px;
-    height: 36px;
+    width: calc(var(--cell-size) * 0.8); /* Adjust stone size based on cell size */
+    height: calc(var(--cell-size) * 0.8); /* Adjust stone size based on cell size */
     border-radius: 50%;
     position: absolute;
     transform: translate(-50%, -50%); /* 交点の中央に配置 */
