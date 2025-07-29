@@ -7,16 +7,22 @@ body {
     font-family: 'Share Tech Mono', monospace;
     color: #00f0f0; /* サイバーな青緑 */
     margin: 0;
-    overflow: hidden;
+    overflow: hidden; /* Prevent scrollbars */
 }
 
 .game-container {
     text-align: center;
     background-color: #0f0f1a; /* さらに暗い背景 */
-    padding: 20px;
+    padding: 20px; /* Fixed padding */
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 240, 240, 0.5); /* 光る影 */
     position: relative;
+    box-sizing: border-box;
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: space-between; /* Distribute space */
+    align-items: center; /* Center items horizontally */
+    overflow: hidden; /* Ensure content doesn't overflow the container */
 }
 
 h1 {
@@ -37,7 +43,6 @@ h1 {
     background-color: #003030; /* Dark background for the board */
     border: 2px solid #00f0f0; /* Outer border for the board */
     box-shadow: 0 0 15px rgba(0, 240, 240, 0.5);
-    margin: 0 auto;
     position: relative;
     cursor: pointer;
     box-sizing: border-box; /* Include padding and border in the element's total width and height */

@@ -7,7 +7,6 @@ const restartButton = document.getElementById('restartButton');
 const flashEffect = document.getElementById('flashEffect'); // フラッシュエフェクト要素を追加
 
 const BOARD_SIZE = 11; // 11x11の交点を持つ盤面
-const CELL_SIZE = 40; // px
 const EMPTY = 0;
 const BLACK = 1;
 const WHITE = 2;
@@ -15,6 +14,7 @@ const WHITE = 2;
 let board = [];
 let currentTurn;
 let gameOver;
+let CELL_SIZE; // Make CELL_SIZE dynamic
 
 // --- ゲーム初期化 --- //
 function initGame() {
@@ -24,6 +24,38 @@ function initGame() {
     resetButton.classList.remove('hidden');
     currentTurn = BLACK; // 黒から開始
     updateTurnDisplay();
+
+    // Get actual heights of non-board elements
+    // These elements are direct children of game-container, which is a flex column.
+    // Their heights contribute to the total height of the game-container.
+    const h1 = document.querySelector('h1');
+    const statusArea = document.querySelector('.status-area');
+    const controls = document.querySelector('.controls');
+
+    const h1Height = h1 ? h1.offsetHeight : 0;
+    const statusAreaHeight = statusArea ? statusArea.offsetHeight : 0;
+    const controlsHeight = controls ? controls.offsetHeight : 0;
+
+    // Total fixed vertical space taken by non-board elements and game-container padding
+    // game-container has padding: 20px; (top and bottom)
+    const fixedVerticalSpace = h1Height + statusAreaHeight + controlsHeight + (20 * 2); // 20px padding top/bottom
+
+    // Total fixed horizontal space taken by game-container padding
+    const fixedHorizontalSpace = 20 * 2; // 20px padding left/right
+
+    // Calculate available space for the board
+    const availableWidthForBoard = window.innerWidth - fixedHorizontalSpace;
+    const availableHeightForBoard = window.innerHeight - fixedVerticalSpace;
+
+    // Calculate CELL_SIZE based on the smaller of the available dimensions for the board
+    // Divide by (BOARD_SIZE - 1) because the board is (BOARD_SIZE-1) * CELL_SIZE
+    CELL_SIZE = Math.floor(Math.min(availableWidthForBoard / (BOARD_SIZE - 1), availableHeightForBoard / (BOARD_SIZE - 1)));
+
+    // Ensure a minimum cell size for usability
+    CELL_SIZE = Math.max(CELL_SIZE, 20); // Minimum 20px per cell
+
+    // Scale down the board to 2/3 of the calculated size
+    CELL_SIZE = Math.floor(CELL_SIZE * (2/3));
 
     // CSS変数に盤面サイズとセルサイズを設定
     document.documentElement.style.setProperty('--board-size', BOARD_SIZE);
@@ -288,6 +320,9 @@ function endGame(winnerColor) {
 // --- イベントリスナー --- //
 resetButton.addEventListener('click', initGame);
 restartButton.addEventListener('click', initGame);
+
+// Add resize event listener to re-initialize game on window resize
+window.addEventListener('resize', initGame);
 
 // --- 初期化 --- //
 initGame();
