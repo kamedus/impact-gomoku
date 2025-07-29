@@ -32,22 +32,22 @@ h1 {
 }
 
 .board {
-    width: calc((var(--board-size) - 1) * var(--cell-size)); /* 盤面の総幅 */
-    height: calc((var(--board-size) - 1) * var(--cell-size)); /* 盤面の総高さ */
-    background-color: #003030; /* 盤面のベース色 */
-    background-image:
-        /* Vertical lines */
-        repeating-linear-gradient(to right, #00f0f0 0, #00f0f0 2px, transparent 2px, transparent var(--cell-size)),
-        /* Horizontal lines */
-        repeating-linear-gradient(to bottom, #00f0f0 0, #00f0f0 2px, transparent 2px, transparent var(--cell-size));
-    background-size: var(--cell-size) var(--cell-size); /* グリッド線の間隔 */
-    background-position: 0 0; /* 線が盤面の端から描画されるように調整 */
-    /* border: 2px solid #00f0f0; */ /* 盤面の外枠はグリッド線で表現するため削除 */
+    width: calc((var(--board-size) - 1) * var(--cell-size));
+    height: calc((var(--board-size) - 1) * var(--cell-size));
+    background-color: #003030; /* Dark background for the board */
+    border: 2px solid #00f0f0; /* Outer border for the board */
     box-shadow: 0 0 15px rgba(0, 240, 240, 0.5);
     margin: 0 auto;
-    position: relative; /* 石の絶対配置の基準 */
+    position: relative;
     cursor: pointer;
-    box-sizing: content-box; /* サイズ計算のずれを防ぐ */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+
+    /* Grid lines */
+    background-image:
+        repeating-linear-gradient(to right, #00f0f0 0, #00f0f0 1px, transparent 1px, transparent var(--cell-size)),
+        repeating-linear-gradient(to bottom, #00f0f0 0, #00f0f0 1px, transparent 1px, transparent var(--cell-size));
+    background-size: var(--cell-size) var(--cell-size);
+    background-position: 0 0; /* Start drawing from the top-left corner */
 }
 
 .cell { /* cellクラスはクリック判定用として残すが、見た目はなくす */

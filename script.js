@@ -213,8 +213,8 @@ function placeStone(row, col, color) {
         endGame(color);
     }
 
-    // 1/7の確率でフラッシュエフェクト
-    if (Math.random() < 1/7) {
+    // 1/3の確率でフラッシュエフェクト
+    if (Math.random() < 1/3) {
         flashEffect.classList.remove('hidden');
         setTimeout(() => {
             flashEffect.classList.add('hidden');
